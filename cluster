@@ -1,0 +1,102 @@
+#!/usr/bin/env python 
+# -*- coding: utf-8 -*-
+"""
+  DRBD Cluster Solution. 
+  Copyright (C) 2015 Mikael Kall.
+  This script manages failover solutions with drbd.  
+"""
+__author__ = 'kall.micke@gmail.com'
+
+import sys
+import os
+from clusterlib.clusterlib import *
+
+# Setup standard path since cron dosent run with enviroment variables
+os.environ["PATH"] += os.pathsep + os.pathsep.join(['/bin','/sbin','/usr/bin','/usr/local/bin','/usr/local/sbin'])
+
+def __usage():
+     print ("""
+   _____         _
+  / __| |_  _ __| |_ ___ _ _ 
+ | (__| | || (_-<  _/ -_) '_|
+  \___|_|\_,_/__/\__\___|_|  
+                                                  
+Usage: cluster [OPTIONS]
+
+General Options
+
+   status	  			             Show cluster status.
+   active 	    [--other_node_passive=False]     Set this node to active.
+   passive	    [--other_node_active=False]      Set this node to passive. 
+
+Advanced Options
+
+   heartbeat				             Trigger heartbeat.
+   heartbeat on     [--other_node_ha_enable=False]   Enable heartbeat.
+   heartbeat off    [--other_node_ha_disable=False]  Disable heartbeat.
+   heartbeat status			             Show heartbeat status.	
+		
+Optional Arguments
+
+   --other_node_passive=False		      	     Opposite node will not automatic be set to passive.
+   --other_node_active=False		      	     Opposite node will not automatic be set to active.
+   --other_node_ha_disable=False	     	     Opposite node will not automatic set heartbeat to disabled.
+   --other_node_ha_enable=False		      	     Opposite node will not automatic set heartbeat to enabled.
+	    """)    
+
+     sys.exit(0)
+
+
+if __name__ == "__main__":
+    if len(sys.argv)<2:
+        __usage()
+
+    opt = sys.argv[1].strip()
+    if opt.lower() == "status":
+	clusterlib().status()
+    elif opt.lower() == "active":
+	try:
+	    if sys.argv[2].strip() == "--other_node_passive=False":
+	        clusterlib().active(False)
+	    else:
+		clusterlib().active(True)
+	except:	
+	    clusterlib().active(True)	
+    elif opt.lower() == "passive":
+	try:
+	    if sys.argv[2].strip() == "--other_node_active=False":
+	        clusterlib().passive(False)
+	    else:
+		clusterlib().passive(True)
+	except:
+	    clusterlib().passive(True)
+    elif opt.lower() == "sanity_check":
+	clusterlib().sanity_check()
+    elif opt.lower() == "heartbeat":
+	try:
+	    if sys.argv[2].strip() == "status":
+	        clusterlib().heartbeat_status()
+		sys.exit(0)
+	    elif sys.argv[2].strip() == "on":
+	        try:
+		    if sys.argv[3].strip() == "--other_node_ha_enable=False":
+			clusterlib().enable_ha_cronjob(False)
+			os._exit(0)
+		except:
+		    pass
+                clusterlib().enable_ha_cronjob(True)
+                sys.exit(0)
+	    elif sys.argv[2].strip() == "off":
+	        try:
+		    if sys.argv[3].strip() == "--other_node_ha_disable=False":
+		        clusterlib().disable_ha_cronjob(False)
+			os._exit(0)
+		except:
+		    pass
+		clusterlib().disable_ha_cronjob(True)
+		sys.exit(0)
+	except:
+	    pass
+	clusterlib().heartbeat()
+    else:
+	__usage()

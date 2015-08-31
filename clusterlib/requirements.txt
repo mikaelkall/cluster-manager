@@ -1,0 +1,9 @@
+Fabric==1.10.1
+configparser==3.5.0b2
+crypto==1.4.1
+ecdsa==0.13
+paramiko==1.15.2
+pycrypto==2.6.1
+python-crontab==1.9.3
+requests==2.7.0
+Yapsy==1.11.223

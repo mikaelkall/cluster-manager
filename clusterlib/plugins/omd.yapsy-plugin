@@ -1,0 +1,9 @@
+[Core]
+Name = omd
+Module = omd
+
+[Documentation]
+Author = Mikael Kall
+Version = 0.1
+Website = https://github.com/n1ght3r/cluster-manager.git
+Description = Handles OMD cluster solution.

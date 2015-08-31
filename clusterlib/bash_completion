@@ -1,0 +1,22 @@
+_cluster()
+{
+    local cur prev opts
+    COMPREPLY=()
+    cur="${COMP_WORDS[COMP_CWORD]}"
+    prev="${COMP_WORDS[COMP_CWORD-1]}"
+
+    case "$prev" in
+
+    heartbeat)
+        opts="status on off"
+        COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+    ;;
+    *)
+        if [[ $prev == "./cluster" ]] || [[ ${prev} == "cluster" ]]; then
+            opts="active passive status heartbeat"
+            COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+        fi
+    ;;
+    esac
+}
+complete -F _cluster cluster
