@@ -76,9 +76,8 @@ node1|node2 # ln -s /home/cluster/clusterlib/bash_completion /etc/bash_completio
 Cluster user need sudo support.
 
 ```js
-node1|node2 # visudo  
+node1|node2 # echo "cluster ALL=NOPASSWD:   ALL" | (EDITOR="tee -a" visudo)  
 ```
-Add "cluster ALL=NOPASSWD:   ALL"
 Note If you are concern of the security you can only add commands required by cluster manager toolset and not allow "ALL"
 
 
